@@ -1,4 +1,6 @@
 using APICatalogo.Context; // Importa o namespace que contém o contexto do banco de dados
+using APICatalogo.DTOs;
+using APICatalogo.DTOs.Mappings;
 using APICatalogo.Filters; // Importa o namespace que contém os filtros personalizados
 using APICatalogo.Logging; // Importa o namespace que contém o provedor de log personalizado
 using APICatalogo.Repositories;
@@ -18,7 +20,7 @@ builder.Services.AddControllers(options =>
 {
     // Configura a serialização JSON para ignorar ciclos de referência (evita erros de referência circular)
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-});
+}).AddNewtonsoftJson();
 
 builder.Services.AddEndpointsApiExplorer(); // Adiciona suporte para exploração de endpoints da API
 builder.Services.AddSwaggerGen(); // Adiciona suporte para geração de documentação Swagger
@@ -34,6 +36,8 @@ builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddAutoMapper(typeof(ProdutoDTOMappingProfile));
 
 // Configura o sistema de logging para usar um provedor de log personalizado com o nível de log definido
 builder.Logging.AddProvider(new CustomLoggerProvider(new CustomLoggerProviderConfiguration
